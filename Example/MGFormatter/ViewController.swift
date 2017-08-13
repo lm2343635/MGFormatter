@@ -7,117 +7,19 @@
 //
 
 import UIKit
-import SwiftyJSON
-import M80AttributedLabel
+import MGFormatter
 
-let string = "{\"result\":{\"messages\":[{\"mid\":\"000000005cb02e93015cb0be48380022\",\"createAt\":1497613879352,\"updateAt\":1497613879352,\"seq\":6,\"title\":\"Sanyo refrigerator\",\"price\":4000,\"cover\":\"/files/picture/000000005cb02e93015cb0be48380022/7edc55ae-551e-49a8-ba40-5f5e99e6a632.jpg\",\"favorites\":1,\"enable\":true,\"cid\":\"000000005bce908d015bd18e59460006\"},{\"mid\":\"000000005cb02e93015cb09afa750005\",\"createAt\":1497611565668,\"updateAt\":1497611565668,\"seq\":1,\"title\":\"A good lamp \",\"price\":1000,\"cover\":\"/files/picture/000000005cb02e93015cb09afa750005/51bcb4a5-5a9a-4e87-95f0-9a7b14de55a5.jpg\",\"favorites\":3,\"enable\":true,\"cid\":\"000000005bce908d015bd18e59460006\"}]},\"status\":200,\"type\":\"application/json\",\"time\":2.56,\"update\":true}"
+let string = "{\"result\":{\"rev\":39,\"update\":true,\"categories\":[{\"cid\":\"000000005bce908d015bd18e59460006\",\"createAt\":1493869418822,\"enable\":true,\"active\":true,\"identifier\":\"Appliances\",\"name\":{\"en\":\"Appliances\",\"zh\":\"家电\",\"ja\":\"家電\"},\"icon\":\"/files/category/14d0c75b-b5b6-4461-9d26-39015e374332.png\",\"rev\":39,\"priority\":0},{\"cid\":\"000000005bd1f743015bd2252d460001\",\"createAt\":1493879303494,\"enable\":true,\"active\":true,\"identifier\":\"Home\",\"name\":{\"en\":\"Home\",\"zh\":\"家居\",\"ja\":\"ホーム\"},\"icon\":\"/files/category/5a6a517a-28d0-490a-878a-b02c2153f5f6.png\",\"rev\":38,\"priority\":1},{\"cid\":\"000000005bd1f743015bd40996590003\",\"createAt\":1493911049816,\"enable\":true,\"active\":true,\"identifier\":\"Electronics\",\"name\":{\"en\":\"Electronics\",\"zh\":\"数码\",\"ja\":\"デジタル\"},\"icon\":\"/files/category/82fefe2d-8f6b-4a03-b9cb-5a52c48498b4.png\",\"rev\":37,\"priority\":2},{\"cid\":\"000000005bd1f743015bd40a41d60004\",\"createAt\":1493911093718,\"enable\":true,\"active\":true,\"identifier\":\"Books\",\"name\":{\"en\":\"Books\",\"zh\":\"图书\",\"ja\":\"本\"},\"icon\":\"/files/category/33bc9774-0a39-4365-adde-247db5291375.png\",\"rev\":36,\"priority\":3},{\"cid\":\"000000005bd1f743015bd40bff830005\",\"createAt\":1493911207811,\"enable\":true,\"active\":true,\"identifier\":\"Cycling\",\"name\":{\"en\":\"Cycling\",\"zh\":\"自行车\",\"ja\":\"自転車\"},\"icon\":\"/files/category/df6068ff-c40c-457d-921f-d1929091cd14.png\",\"rev\":35,\"priority\":4},{\"cid\":\"000000005bd1f743015bd40d078b0006\",\"createAt\":1493911275402,\"enable\":true,\"active\":true,\"identifier\":\"Automotive\",\"name\":{\"en\":\"Automotive\",\"zh\":\"汽车\",\"ja\":\"車\"},\"icon\":\"/files/category/90baad57-19d3-4bd4-b00f-d13453ecfd14.png\",\"rev\":34,\"priority\":5},{\"cid\":\"000000005bd1f743015bd40dae390007\",\"createAt\":1493911318073,\"enable\":true,\"active\":true,\"identifier\":\"Games\",\"name\":{\"en\":\"Games\",\"zh\":\"游戏\",\"ja\":\"ゲーム\"},\"icon\":\"/files/category/d2a4046b-eb8a-42b8-8f83-20796c106e8a.png\",\"rev\":33,\"priority\":6},{\"cid\":\"000000005bd1f743015bd416763c0008\",\"createAt\":1493911893564,\"enable\":true,\"active\":true,\"identifier\":\"Others\",\"name\":{\"en\":\"Others\",\"zh\":\"其他\",\"ja\":\"他\"},\"icon\":\"/files/category/2430f7a5-2e07-4a21-824c-8e23bbcb0efa.png\",\"rev\":32,\"priority\":999}]},\"status\":200}"
 
 class ViewController: UIViewController {
     
-    var tabs = 0
-
-    let prettyLabel = M80AttributedLabel()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        if let data = string.data(using: .utf8) {
-            let json = JSON(data: data)
-            appendJSON(json)
-        }
-
-        let width = self.view.frame.size.width
-        let height = self.view.frame.size.height
-        
-        //Set pretty scroll view
-        let prettySize = prettyLabel.sizeThatFits(CGSize.init(width: width - 10, height: CGFloat.greatestFiniteMagnitude))
-        prettyLabel.frame = CGRect.init(x: 5, y: 5, width: prettySize.width, height: prettySize.height)
-        prettyLabel.backgroundColor = UIColor.clear
-        let prettyScrollView: UIScrollView = {
-            let view = UIScrollView(frame: CGRect(x: 0, y: 50, width: width, height: height - 50))
-            view.contentSize = CGSize.init(width: width, height: prettySize.height + 70)
-            view.addSubview(prettyLabel)
-            return view
-        }()
-        
-        view.addSubview(prettyScrollView)
-
+        let formatterView = FormatterView(string,
+                                          color: FormatterColor.light,
+                                          frame: CGRect(x: 0, y: 50, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - 50))
+        view.addSubview(formatterView)
     }
     
-    func appendJSON(_ json: JSON) {
-        tabs += 1
-        appendNormal("{\n")
-        for (key, subJson):(String, JSON) in json {
-            appendTab(tabs)
-            appendAttribute(key)
-            if let boolean = subJson.bool {
-                appendNormal(boolean ? "true," : "false,")
-            } else if let string = subJson.string {
-                appendString(string)
-            } else if let double = subJson.double {
-                if double.truncatingRemainder(dividingBy: 1) == 0 {
-                    appendNumber(String(format: "%.0f", double))
-                } else {
-                    appendNumber(String(double))
-                }
-            } else if let array = subJson.array  {
-                appendNormal("[\n")
-                tabs += 1
-                appendTab(tabs)
-                for i in 0 ..< array.count {
-                    appendJSON(array[i])
-                    if (i < array.count - 1) {
-                        appendNormal(", ")
-                    }
-                }
-                tabs -= 1
-                newLine()
-                appendTab(tabs)
-                appendNormal("]")
-            } else {
-                appendJSON(subJson)
-            }
-            newLine()
-        }
-        tabs -= 1
-        appendTab(tabs)
-        appendNormal("}")
-    }
-    
-    func appendNormal(_ text: String) {
-        appendText(text, color: .black)
-    }
-    
-    func appendAttribute(_ text: String) {
-        appendText("\"\(text)\": ", color: .red)
-    }
-    
-    func appendNumber(_ text: String) {
-        appendText("\(text),", color: .cyan)
-    }
-    
-    func appendString(_ text: String) {
-        appendText("\"\(text)\",", color: .blue)
-    }
-    
-    func appendTab(_ n: Int) {
-        var tab = ""
-        for _ in 0 ..< n {
-            tab += "  "
-        }
-        appendNormal(tab);
-    }
-    
-    func newLine() {
-        appendNormal("\n")
-    }
-    
-    func appendText(_ text: String, color: UIColor)  {
-        let attributedText = NSMutableAttributedString(string: text)
-        attributedText.m80_setTextColor(color)
-        attributedText.m80_setFont(UIFont(name: "Menlo", size: 12)!)
-        prettyLabel.appendAttributedText(attributedText)
-    }
-
 }
 
