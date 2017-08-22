@@ -13,12 +13,16 @@ let string = "{\"result\":{\"rev\":39,\"update\":true,\"categories\":[{\"cid\":\
 
 class ViewController: UIViewController {
     
+    @IBOutlet weak var urlTextField: UITextField!
+    @IBOutlet weak var formatterView: FormatterView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        let formatterView = FormatterView(string,
-                                          color: FormatterColor.light,
-                                          frame: CGRect(x: 0, y: 50, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - 50))
-        view.addSubview(formatterView)
+        formatterView.format(string, color: .light)
+    }
+    
+    @IBAction func request(_ sender: Any) {
+        
     }
     
 }

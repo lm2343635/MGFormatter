@@ -34,7 +34,7 @@ public class FormatterView: UIScrollView {
     }
     
     required public init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
     }
     
     public func format(_ string: String, color: FormatterColor) {

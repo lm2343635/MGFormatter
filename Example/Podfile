@@ -2,13 +2,14 @@ use_frameworks!
 
 target 'MGFormatter_Example' do
   pod 'MGFormatter', :path => '../'
+  pod 'Alamofire', '~> 4.5'
 
   target 'MGFormatter_Tests' do
     inherit! :search_paths
 
     pod 'Quick', '~> 1.0.0'
-  pod 'Nimble', '~> 5.1.1'
-  pod 'FBSnapshotTestCase'
-  pod 'Nimble-Snapshots'
+    pod 'Nimble', '~> 5.1.1'
+    pod 'FBSnapshotTestCase'
+    pod 'Nimble-Snapshots'
   end
 end
