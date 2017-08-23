@@ -48,8 +48,8 @@ public class FormatterView: UIScrollView {
         
         let size = label.sizeThatFits(CGSize.init(width: self.bounds.width, height: CGFloat.greatestFiniteMagnitude))
         label.frame = CGRect.init(x: 0, y: 0, width: size.width, height: size.height)
-        label.backgroundColor = UIColor.clear
-        
+        label.backgroundColor = .clear
+
         self.contentSize = CGSize.init(width: self.bounds.width, height: size.height)
         self.addSubview(label)
     }
