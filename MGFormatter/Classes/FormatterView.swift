@@ -27,7 +27,7 @@ public class FormatterView: UIScrollView {
     private var string: String!
     private var formatterColor: FormatterColor!
     private var tabs = 0
-
+    
     public init(_ string: String, color: FormatterColor, frame: CGRect) {
         super.init(frame: frame)
         format(string, color: color)
@@ -43,7 +43,7 @@ public class FormatterView: UIScrollView {
         
         if let data = string.data(using: .utf8) {
             let json = JSON(data: data)
-            appendJSON(json)
+            appendJSON(json, false)
         }
         
         let size = label.sizeThatFits(CGSize.init(width: self.bounds.width, height: CGFloat.greatestFiniteMagnitude))
@@ -54,10 +54,17 @@ public class FormatterView: UIScrollView {
         self.addSubview(label)
     }
 
-    private func appendJSON(_ json: JSON) {
+    // Append a json object, do not show comma at last if withComma is false.
+    private func appendJSON(_ json: JSON, _ withComma: Bool) {
+        // If JSON is an array, handle it as an array rather than an object.
+        if let array = json.array {
+            appendJSONArray(array)
+            return
+        }
+        // Handle the json as an object.
         tabs += 1
         append("{\n", type: .normal)
-        for (key, subJson):(String, JSON) in json {
+        for (key, subJson): (String, JSON) in json {
             appendTab(tabs)
             append(key, type: .attribute)
             if let boolean = subJson.bool {
@@ -71,27 +78,35 @@ public class FormatterView: UIScrollView {
                     append(String(double), type: .number)
                 }
             } else if let array = subJson.array  {
-                append("[\n", type: .normal)
-                tabs += 1
-                appendTab(tabs)
-                for i in 0 ..< array.count {
-                    appendJSON(array[i])
-                    if (i < array.count - 1) {
-                        append(", ", type: .normal)
-                    }
-                }
-                tabs -= 1
-                newLine()
-                appendTab(tabs)
-                append("]", type: .normal)
+                appendJSONArray(array)
             } else {
-                appendJSON(subJson)
+                appendJSON(subJson, true)
             }
             newLine()
         }
         tabs -= 1
         appendTab(tabs)
         append("}", type: .normal)
+        if tabs > 0 && withComma {
+            append(", ", type: .normal)
+        }
+    }
+    
+    // Append a json array with type [JSON]
+    private func appendJSONArray(_ array: [JSON]) {
+        append("[\n", type: .normal)
+        tabs += 1
+        appendTab(tabs)
+        for i in 0 ..< array.count {
+            appendJSON(array[i], i < array.count - 1)
+        }
+        tabs -= 1
+        newLine()
+        appendTab(tabs)
+        append("]", type: .normal)
+        if tabs > 0 {
+            append(",", type: .normal)
+        }
     }
 
     private func append(_ text: String, type: FormatType) {

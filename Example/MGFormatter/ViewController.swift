@@ -17,7 +17,6 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
     }
     
     @IBAction func request(_ sender: Any) {
@@ -28,4 +27,3 @@ class ViewController: UIViewController {
     }
     
 }
-
