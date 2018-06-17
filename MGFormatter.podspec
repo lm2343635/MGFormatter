@@ -39,6 +39,7 @@ TODO: Add long description of the pod here.
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
 
-  s.dependency 'SwiftyJSON', '~> 3'
+  s.dependency 'SwiftyJSON', '~> 4'
   s.dependency 'M80AttributedLabel', '~> 1.6'
+  s.dependency 'SnapKit', '~> 4'
 end

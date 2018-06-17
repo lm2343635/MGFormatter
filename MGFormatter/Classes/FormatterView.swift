@@ -9,6 +9,7 @@
 import UIKit
 import SwiftyJSON
 import M80AttributedLabel
+import SnapKit
 
 enum FormatType {
     case normal
@@ -20,9 +21,21 @@ enum FormatType {
     case newLine
 }
 
-public class FormatterView: UIScrollView {
+public class FormatterView: UIView {
+    
+    private struct Const {
+        static let trueName = "true"
+        static let falseName = "false"
+    }
+    
+    private lazy var codeScrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        
+        
+        return scrollView
+    }()
 
-    private let label = M80AttributedLabel()
+    private lazy var label = M80AttributedLabel()
     
     private var string: String!
     private var formatterColor: FormatterColor!
@@ -42,7 +55,7 @@ public class FormatterView: UIScrollView {
         self.formatterColor = color
         
         if let data = string.data(using: .utf8) {
-            let json = JSON(data: data)
+            let json = try! JSON(data: data)
             appendJSON(json, false)
         }
         
@@ -50,8 +63,16 @@ public class FormatterView: UIScrollView {
         label.frame = CGRect.init(x: 0, y: 0, width: size.width, height: size.height)
         label.backgroundColor = .clear
 
-        self.contentSize = CGSize.init(width: self.bounds.width, height: size.height)
-        self.addSubview(label)
+        codeScrollView.contentSize = CGSize.init(width: self.bounds.width, height: size.height)
+        codeScrollView.addSubview(label)
+        addSubview(codeScrollView)
+        
+        codeScrollView.snp.makeConstraints {
+            $0.left.equalToSuperview()
+            $0.right.equalToSuperview()
+            $0.top.equalToSuperview()
+            $0.bottom.equalToSuperview()
+        }
     }
 
     // Append a json object, do not show comma at last if withComma is false.
@@ -68,7 +89,7 @@ public class FormatterView: UIScrollView {
             appendTab(tabs)
             append(key, type: .attribute)
             if let boolean = subJson.bool {
-                append(boolean ? "true" : "false", type: .boolean)
+                append(boolean ? Const.trueName : Const.falseName, type: .boolean)
             } else if let string = subJson.string {
                 append(string, type: .string)
             } else if let double = subJson.double {
