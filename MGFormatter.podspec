@@ -40,6 +40,6 @@ TODO: Add long description of the pod here.
   # s.frameworks = 'UIKit', 'MapKit'
 
   s.dependency 'SwiftyJSON', '~> 4'
-  s.dependency 'M80AttributedLabel', '~> 1.6'
+  s.dependency 'AttributedTextView', '~> 0.9'
   s.dependency 'SnapKit', '~> 4'
 end

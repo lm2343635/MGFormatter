@@ -2,16 +2,16 @@
 //  FormatterView.swift
 //  Pods
 //
-//  Created by lidaye on 13/08/2017.
+//  Created by Meng Li on 13/08/2017.
 //
 //
 
 import UIKit
 import SwiftyJSON
-import M80AttributedLabel
+import AttributedTextView
 import SnapKit
 
-enum FormatType {
+enum CodeType {
     case normal
     case attribute
     case boolean
@@ -28,46 +28,26 @@ public class FormatterView: UIView {
         static let falseName = "false"
     }
     
-    private lazy var codeScrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        
-        
-        return scrollView
-    }()
-
-    private lazy var label = M80AttributedLabel()
+    private lazy var codeTextView = AttributedTextView()
     
-    private var string: String!
-    private var formatterColor: FormatterColor!
+    private var string: String = ""
+    private var style: FormatterStyle = .light
+    
     private var tabs = 0
+    private var attributer = Attributer("")
     
-    public init(_ string: String, color: FormatterColor, frame: CGRect) {
-        super.init(frame: frame)
-        format(string, color: color)
-    }
     
-    required public init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-    
-    public func format(_ string: String, color: FormatterColor) {
+    public func format(string: String, style: FormatterStyle) {
         self.string = string
-        self.formatterColor = color
+        self.style = style
         
         if let data = string.data(using: .utf8) {
             let json = try! JSON(data: data)
             appendJSON(json, false)
         }
-        
-        let size = label.sizeThatFits(CGSize.init(width: self.bounds.width, height: CGFloat.greatestFiniteMagnitude))
-        label.frame = CGRect.init(x: 0, y: 0, width: size.width, height: size.height)
-        label.backgroundColor = .clear
 
-        codeScrollView.contentSize = CGSize.init(width: self.bounds.width, height: size.height)
-        codeScrollView.addSubview(label)
-        addSubview(codeScrollView)
-        
-        codeScrollView.snp.makeConstraints {
+        addSubview(codeTextView)
+        codeTextView.snp.makeConstraints {
             $0.left.equalToSuperview()
             $0.right.equalToSuperview()
             $0.top.equalToSuperview()
@@ -111,6 +91,12 @@ public class FormatterView: UIView {
         if tabs > 0 && withComma {
             append(", ", type: .normal)
         }
+        
+        codeTextView.attributer = attributer.all.paragraph({
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineSpacing = style.lineSpacing
+            return paragraphStyle
+        }()).font(style.font)
     }
     
     // Append a json array with type [JSON]
@@ -130,18 +116,18 @@ public class FormatterView: UIView {
         }
     }
 
-    private func append(_ text: String, type: FormatType) {
+    private func append(_ text: String, type: CodeType) {
         switch type {
         case .normal:
-            appendAttributedText(text, color: formatterColor.normal)
+            attributer = attributer.append(text.color(style.color.normal))
         case .attribute:
-            appendAttributedText("\"\(text)\": ", color: formatterColor.attribute)
+            attributer = attributer.append("\"\(text)\": ".color(style.color.attribute))
         case .boolean:
-            appendAttributedText("\(text),", color: formatterColor.boolean)
+            attributer = attributer.append("\(text),".color(style.color.boolean))
         case .number:
-            appendAttributedText("\(text),", color: formatterColor.number)
+            attributer = attributer.append("\(text),".color(style.color.number))
         case .string:
-            appendAttributedText("\"\(text)\",", color: formatterColor.string)
+            attributer = attributer.append("\"\(text)\",".color(style.color.string))
         default:
             break
         }
@@ -157,13 +143,6 @@ public class FormatterView: UIView {
     
     private func newLine() {
         append("\n", type: .normal)
-    }
-    
-    private func appendAttributedText(_ text: String, color: UIColor)  {
-        let attributedText = NSMutableAttributedString(string: text)
-        attributedText.m80_setTextColor(color)
-        attributedText.m80_setFont(UIFont(name: "Menlo", size: 12)!)
-        label.appendAttributedText(attributedText)
     }
 
 }

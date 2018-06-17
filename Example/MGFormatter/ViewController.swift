@@ -22,7 +22,7 @@ class ViewController: UIViewController {
     @IBAction func request(_ sender: Any) {
         Alamofire.request(urlTextField.text!).responseJSON { (response) in
             let utf8Text = String(data: response.data!, encoding: .utf8) ?? ""
-            self.formatterView.format(utf8Text, color: .light)
+            self.formatterView.format(string: utf8Text, style: .light)
         }
     }
     
