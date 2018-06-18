@@ -17,12 +17,14 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        request(formatterView)
     }
     
     @IBAction func request(_ sender: Any) {
         Alamofire.request(urlTextField.text!).responseJSON { (response) in
             let utf8Text = String(data: response.data!, encoding: .utf8) ?? ""
-            self.formatterView.format(string: utf8Text, style: .light)
+            self.formatterView.format(string: utf8Text, style: .dark)
         }
     }
     

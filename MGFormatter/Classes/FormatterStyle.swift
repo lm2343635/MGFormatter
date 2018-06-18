@@ -29,7 +29,7 @@ public class FormatterColor {
     }
     
     public class var dark: FormatterColor {
-        return FormatterColor(normal: .white, attribute: .magenta, boolean: .cyan, string: .green, number: .orange)
+        return FormatterColor(normal: .white, attribute: .yellow, boolean: .green, string: .cyan, number: .orange)
     }
     
 }

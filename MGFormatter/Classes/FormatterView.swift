@@ -28,7 +28,11 @@ public class FormatterView: UIView {
         static let falseName = "false"
     }
     
-    private lazy var codeTextView = AttributedTextView()
+    private lazy var codeTextView: AttributedTextView = {
+        let textView = AttributedTextView()
+        textView.backgroundColor = .clear
+        return textView
+    }()
     
     private var string: String = ""
     private var style: FormatterStyle = .light

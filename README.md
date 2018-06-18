@@ -11,13 +11,38 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 ## Requirements
 
+- iOS 9.0+
+- Xcodw 9.0+
+
+## Usage
+
+Just create a **FormatterView** and set the code you want to format.
+
+```Swift
+formatterView.format(string: utf8Text, style: .dark)
+```
+
+### About style
+
+The follow style can be customized be the developers.
+
+- Color of key words.
+- Font.
+- Line spacing.
+
+Dark and light style can be used directly.
+
+### Supported code style
+
+- JSON
+
 ## Installation
 
 MGFormatter is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod "MGFormatter"
+pod 'MGFormatter', '~> 0.1'
 ```
 
 ## Author

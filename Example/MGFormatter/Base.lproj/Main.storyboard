@@ -17,6 +17,10 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="roV-eI-cx7">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="0.27058823529999998" green="0.27058823529999998" blue="0.27058823529999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
                     </navigationBar>
                     <connections>
                         <segue destination="vXZ-lx-hvc" kind="relationship" relationship="rootViewController" id="Ekn-rN-yJG"/>
@@ -38,27 +42,39 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="https://tsukuba.mushare.cn/api/category/list" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="RhN-eP-KnP">
-                                <rect key="frame" x="16" y="80" width="305" height="30"/>
-                                <nil key="textColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H6m-85-Yhd">
                                 <rect key="frame" x="329" y="80" width="30" height="30"/>
-                                <state key="normal" title="Get"/>
+                                <state key="normal" title="Get">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
                                 <connections>
                                     <action selector="request:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Xi7-go-4Ry"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jqq-9J-ImA" customClass="FormatterView" customModule="MGFormatter">
                                 <rect key="frame" x="16" y="118" width="343" height="529"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" text="https://tsukuba.mushare.cn/api/category/list" borderStyle="bezel" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="RhN-eP-KnP">
+                                <rect key="frame" x="16" y="80" width="305" height="30"/>
+                                <color key="backgroundColor" red="0.64724327594615372" green="0.64336756770695513" blue="0.65111898418535219" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="n3n-w8-Kat"/>
+                                </constraints>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </textField>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.40840868870000002" green="0.40596312769999998" blue="0.41085424970000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="jqq-9J-ImA" secondAttribute="trailing" constant="16" id="0Xl-LB-Nj1"/>
+                            <constraint firstItem="RhN-eP-KnP" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="16" id="7c0-pV-PiB"/>
                             <constraint firstAttribute="leadingMargin" secondItem="RhN-eP-KnP" secondAttribute="leading" id="9qy-fW-5oY"/>
                             <constraint firstItem="jqq-9J-ImA" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="16" id="DI2-k5-41V"/>
                             <constraint firstAttribute="trailingMargin" secondItem="RhN-eP-KnP" secondAttribute="trailing" constant="38" id="Drl-Et-3rf"/>
@@ -66,7 +82,6 @@
                             <constraint firstItem="H6m-85-Yhd" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="16" id="Sf5-g8-aij"/>
                             <constraint firstAttribute="trailingMargin" secondItem="H6m-85-Yhd" secondAttribute="trailing" id="USw-Zx-h40"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="jqq-9J-ImA" secondAttribute="bottom" constant="20" id="gsK-0n-wXs"/>
-                            <constraint firstItem="RhN-eP-KnP" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="16" id="mD3-Bg-4WA"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="MGFomatter" id="65j-d4-RgA"/>
