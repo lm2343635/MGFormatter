@@ -5,6 +5,10 @@
 [![License](https://img.shields.io/cocoapods/l/MGFormatter.svg?style=flat)](http://cocoapods.org/pods/MGFormatter)
 [![Platform](https://img.shields.io/cocoapods/p/MGFormatter.svg?style=flat)](http://cocoapods.org/pods/MGFormatter)
 
+MGFormatter can format code(JSON, XML, HTML..,) in a view with customized keyword color and font.
+
+<img src="https://raw.githubusercontent.com/lm2343635/MGFormatter/master/screenshot/demo-dark.png" width="340px">
+
 ## Example
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
