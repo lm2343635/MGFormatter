@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class FormatterColor {
+public class JSONColor {
     
     var normal: UIColor
     var attribute: UIColor
@@ -24,45 +24,88 @@ public class FormatterColor {
         self.number = number
     }
     
-    public class var light: FormatterColor {
-        return FormatterColor(normal: .darkGray, attribute: .red, boolean: .brown, string: .blue, number: .purple)
+    public class var light: JSONColor {
+        return JSONColor(normal: .darkGray,
+                         attribute: .red,
+                         boolean: .brown,
+                         string: .blue,
+                         number: .purple)
     }
     
-    public class var dark: FormatterColor {
-        return FormatterColor(normal: .white, attribute: .yellow, boolean: .green, string: .cyan, number: .orange)
+    public class var dark: JSONColor {
+        return JSONColor(normal: .white,
+                         attribute: .yellow,
+                         boolean: .green,
+                         string: .cyan,
+                         number: .orange)
     }
     
 }
 
+public class HTMLColor {
+    
+    var normal: UIColor
+    var tag: UIColor
+    var attributeName: UIColor
+    var attributeValue: UIColor
+    
+    init(normal: UIColor, tag: UIColor, attributeName: UIColor, attributeValue: UIColor) {
+        self.normal = normal
+        self.tag = tag
+        self.attributeName = attributeName
+        self.attributeValue = attributeValue
+    }
+    
+    public class var light: HTMLColor {
+        return HTMLColor(normal: .darkGray,
+                         tag: .orange,
+                         attributeName: .blue,
+                         attributeValue: .magenta)
+    }
+
+    public class var dark: HTMLColor {
+        return HTMLColor(normal: .white,
+                         tag: .cyan,
+                         attributeName: .green,
+                         attributeValue: .yellow)
+    }
+
+}
+
 enum FormatterType {
-    case json
-    case xml
-    case htm
-    case automatic
+    case json(JSONColor)
+    case html(HTMLColor)
+    case none(UIColor)
 }
 
 public class FormatterStyle {
     
-    var color: FormatterColor
     var font: UIFont
     var lineSpacing: CGFloat
     var type: FormatterType
     
-    init(color: FormatterColor, font: UIFont, lineSpacing: CGFloat, type: FormatterType) {
-        self.color = color
+    static let defaultFont = UIFont(name: "Menlo", size: 12) ?? UIFont.systemFont(ofSize: 12)
+    
+    init(font: UIFont, lineSpacing: CGFloat, type: FormatterType) {
         self.font = font
         self.lineSpacing = lineSpacing
         self.type = type
     }
     
-    public class var light: FormatterStyle {
-        let font = UIFont(name: "Menlo", size: 12) ?? UIFont.systemFont(ofSize: 12)
-        return FormatterStyle(color: .light, font: font, lineSpacing: 5, type: .automatic)
+    public class var jsonLight: FormatterStyle {
+        return FormatterStyle(font: defaultFont, lineSpacing: 5, type: .json(.light))
     }
     
-    public class var dark: FormatterStyle {
-        let font = UIFont(name: "Menlo", size: 12) ?? UIFont.systemFont(ofSize: 12)
-        return FormatterStyle(color: .dark, font: font, lineSpacing: 5, type: .automatic)
+    public class var jsonDark: FormatterStyle {
+        return FormatterStyle(font: defaultFont, lineSpacing: 5, type: .json(.dark))
+    }
+    
+    public class var htmlLight: FormatterStyle {
+        return FormatterStyle(font: defaultFont, lineSpacing: 5, type: .html(.light))
+    }
+    
+    public class var htmlDark: FormatterStyle {
+        return FormatterStyle(font: defaultFont, lineSpacing: 5, type: .html(.dark))
     }
     
 }

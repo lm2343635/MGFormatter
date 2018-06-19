@@ -12,7 +12,7 @@ import Fuzi
 import AttributedTextView
 import SnapKit
 
-enum CodeType {
+enum JSONCodeType {
     case normal
     case attribute
     case boolean
@@ -40,7 +40,7 @@ public class FormatterView: UIView {
     }()
     
     private var string: String = ""
-    private var style: FormatterStyle = .light
+    private var style: FormatterStyle = .jsonLight
     
     private var tabs = 0
     private var attributer = Attributer("")
@@ -50,20 +50,7 @@ public class FormatterView: UIView {
     public func format(string: String, style: FormatterStyle) {
         self.string = string
         self.style = style
-        
-        
-        
-        //        if let let data = string.data(using: .utf8), let json = try? JSON(data: data) {
-        //            appendJSON(json, false)
-        //        }
-        
-        if let document = try? HTMLDocument(string: string, encoding: .utf8) {
-            if let root = document.root {
-                appendHTML(root)
-                
-            }
-        }
-        
+
         addSubview(codeTextView)
         codeTextView.snp.makeConstraints {
             $0.left.equalToSuperview()
@@ -72,11 +59,25 @@ public class FormatterView: UIView {
             $0.bottom.equalToSuperview()
         }
         
+        switch style.type {
+        case .json(_):
+            if let data = string.data(using: .utf8), let json = try? JSON(data: data) {
+                appendJSON(json, false)
+            }
+            
+        case .html(_):
+            if let document = try? HTMLDocument(string: string, encoding: .utf8), let root = document.root  {
+                appendHTML(root)
+            }
+        case .none(let color):
+            attributer = string.color(color)
+        }
+        
         codeTextView.attributer = attributer.all.paragraph({
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.lineSpacing = style.lineSpacing
             return paragraphStyle
-            }()).font(style.font)
+        }()).font(style.font)
     }
     
     private func appendTab(_ n: Int) {
@@ -84,11 +85,11 @@ public class FormatterView: UIView {
         for _ in 0 ..< n {
             tab += "  "
         }
-        append(tab, type: .normal)
+        attributer = attributer.append(tab)
     }
     
     private func newLine() {
-        append("\n", type: .normal)
+        attributer = attributer.append("\n")
     }
     
 }
@@ -101,15 +102,12 @@ extension FormatterView {
             return
         }
         
-        print(tagStack)
         tagStack.append(tag)
         appendHTMLElement(tag, .startTag(element.attributes))
         tabs += 1
 
         if element.children.count == 0 {
             appendHTMLElement(element.stringValue, .normal)
-            
-            
         } else {
             newLine()
             for children in element.children {
@@ -125,17 +123,19 @@ extension FormatterView {
     }
     
     private func appendHTMLElement(_ text: String, _ type: XMLCodeType) {
-        switch type {
-        case .normal:
-            attributer = attributer.append(text.color(style.color.normal))
-        case .startTag(let attributes):
-            attributer = attributer.append("<\(text)".color(style.color.attribute))
-            for (key, value) in attributes {
-                attributer = attributer.append(" \(key)=\"\(value)\"".color(style.color.normal))
+        if case let .html(color) = style.type {
+            switch type {
+            case .normal:
+                attributer = attributer.append(text.color(color.normal))
+            case .startTag(let attributes):
+                attributer = attributer.append("<\(text)".color(color.tag))
+                for (key, value) in attributes {
+                    attributer = attributer.append(" \(key)".color(color.attributeName) + "=".color(color.normal) + "\"\(value)\"".color(color.attributeValue))
+                }
+                attributer = attributer.append(">".color(color.tag))
+            case .endTag:
+                attributer = attributer.append("</\(text)>".color(color.tag))
             }
-            attributer = attributer.append(">".color(style.color.attribute))
-        case .endTag:
-            attributer = attributer.append("</\(text)>".color(style.color.attribute))
         }
     }
     
@@ -153,19 +153,19 @@ extension FormatterView {
         }
         // Handle the json as an object.
         tabs += 1
-        append("{\n", type: .normal)
+        appendJSONNode("{\n", type: .normal)
         for (key, subJson): (String, JSON) in json {
             appendTab(tabs)
-            append(key, type: .attribute)
+            appendJSONNode(key, type: .attribute)
             if let boolean = subJson.bool {
-                append(boolean ? Const.trueName : Const.falseName, type: .boolean)
+                appendJSONNode(boolean ? Const.trueName : Const.falseName, type: .boolean)
             } else if let string = subJson.string {
-                append(string, type: .string)
+                appendJSONNode(string, type: .string)
             } else if let double = subJson.double {
                 if double.truncatingRemainder(dividingBy: 1) == 0 {
-                    append(String(format: "%.0f", double), type: .number)
+                    appendJSONNode(String(format: "%.0f", double), type: .number)
                 } else {
-                    append(String(double), type: .number)
+                    appendJSONNode(String(double), type: .number)
                 }
             } else if let array = subJson.array  {
                 appendJSONArray(array)
@@ -176,21 +176,16 @@ extension FormatterView {
         }
         tabs -= 1
         appendTab(tabs)
-        append("}", type: .normal)
+        appendJSONNode("}", type: .normal)
         if tabs > 0 && withComma {
-            append(", ", type: .normal)
+            appendJSONNode(", ", type: .normal)
         }
-        
-        codeTextView.attributer = attributer.all.paragraph({
-            let paragraphStyle = NSMutableParagraphStyle()
-            paragraphStyle.lineSpacing = style.lineSpacing
-            return paragraphStyle
-        }()).font(style.font)
+
     }
     
     // Append a json array with type [JSON]
     private func appendJSONArray(_ array: [JSON]) {
-        append("[\n", type: .normal)
+        appendJSONNode("[\n", type: .normal)
         tabs += 1
         appendTab(tabs)
         for i in 0 ..< array.count {
@@ -199,28 +194,28 @@ extension FormatterView {
         tabs -= 1
         newLine()
         appendTab(tabs)
-        append("]", type: .normal)
+        appendJSONNode("]", type: .normal)
         if tabs > 0 {
-            append(",", type: .normal)
+            appendJSONNode(",", type: .normal)
         }
     }
     
-    private func append(_ text: String, type: CodeType) {
-        switch type {
-        case .normal:
-            attributer = attributer.append(text.color(style.color.normal))
-        case .attribute:
-            attributer = attributer.append("\"\(text)\": ".color(style.color.attribute))
-        case .boolean:
-            attributer = attributer.append("\(text),".color(style.color.boolean))
-        case .number:
-            attributer = attributer.append("\(text),".color(style.color.number))
-        case .string:
-            attributer = attributer.append("\"\(text)\",".color(style.color.string))
+    private func appendJSONNode(_ text: String, type: JSONCodeType) {
+        if case let .json(color) = style.type {
+            switch type {
+            case .normal:
+                attributer = attributer.append(text.color(color.normal))
+            case .attribute:
+                attributer = attributer.append("\"\(text)\": ".color(color.attribute))
+            case .boolean:
+                attributer = attributer.append("\(text),".color(color.boolean))
+            case .number:
+                attributer = attributer.append("\(text),".color(color.number))
+            case .string:
+                attributer = attributer.append("\"\(text)\",".color(color.string))
+            }
         }
     }
-    
 
-    
 }
 
