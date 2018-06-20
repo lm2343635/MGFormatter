@@ -42,4 +42,5 @@ MGFormatter can format code(JSON, XML, HTML..,) in a view with customized keywor
   s.dependency 'SwiftyJSON', '~> 4'
   s.dependency 'AttributedTextView', '~> 0.9'
   s.dependency 'SnapKit', '~> 4'
+  s.dependency 'Fuzi', '~> 2'
 end

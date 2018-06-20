@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftyJSON
+import Fuzi
 import AttributedTextView
 import SnapKit
 
@@ -17,8 +18,12 @@ enum CodeType {
     case boolean
     case string
     case number
-    case tab
-    case newLine
+}
+
+enum XMLCodeType {
+    case normal
+    case startTag([String: String])
+    case endTag
 }
 
 public class FormatterView: UIView {
@@ -40,16 +45,25 @@ public class FormatterView: UIView {
     private var tabs = 0
     private var attributer = Attributer("")
     
+    private var tagStack: [String] = []
     
     public func format(string: String, style: FormatterStyle) {
         self.string = string
         self.style = style
         
-        if let data = string.data(using: .utf8) {
-            let json = try! JSON(data: data)
-            appendJSON(json, false)
+        
+        
+        //        if let let data = string.data(using: .utf8), let json = try? JSON(data: data) {
+        //            appendJSON(json, false)
+        //        }
+        
+        if let document = try? HTMLDocument(string: string, encoding: .utf8) {
+            if let root = document.root {
+                appendHTML(root)
+                
+            }
         }
-
+        
         addSubview(codeTextView)
         codeTextView.snp.makeConstraints {
             $0.left.equalToSuperview()
@@ -57,8 +71,79 @@ public class FormatterView: UIView {
             $0.top.equalToSuperview()
             $0.bottom.equalToSuperview()
         }
+        
+        codeTextView.attributer = attributer.all.paragraph({
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineSpacing = style.lineSpacing
+            return paragraphStyle
+            }()).font(style.font)
     }
+    
+    private func appendTab(_ n: Int) {
+        var tab = ""
+        for _ in 0 ..< n {
+            tab += "  "
+        }
+        append(tab, type: .normal)
+    }
+    
+    private func newLine() {
+        append("\n", type: .normal)
+    }
+    
+}
 
+// MARK: HTML Formatter
+extension FormatterView {
+    
+    private func appendHTML(_ element: XMLElement?) {
+        guard let element = element, let tag = element.tag else {
+            return
+        }
+        
+        print(tagStack)
+        tagStack.append(tag)
+        appendHTMLElement(tag, .startTag(element.attributes))
+        tabs += 1
+
+        if element.children.count == 0 {
+            appendHTMLElement(element.stringValue, .normal)
+            
+            
+        } else {
+            newLine()
+            for children in element.children {
+                appendTab(tabs)
+                appendHTML(children)
+            }
+            appendTab(tabs - 1)
+        }
+        appendHTMLElement(tagStack[tagStack.count - 1], .endTag)
+        tagStack.remove(at: tagStack.count - 1)
+        newLine()
+        tabs -= 1
+    }
+    
+    private func appendHTMLElement(_ text: String, _ type: XMLCodeType) {
+        switch type {
+        case .normal:
+            attributer = attributer.append(text.color(style.color.normal))
+        case .startTag(let attributes):
+            attributer = attributer.append("<\(text)".color(style.color.attribute))
+            for (key, value) in attributes {
+                attributer = attributer.append(" \(key)=\"\(value)\"".color(style.color.normal))
+            }
+            attributer = attributer.append(">".color(style.color.attribute))
+        case .endTag:
+            attributer = attributer.append("</\(text)>".color(style.color.attribute))
+        }
+    }
+    
+}
+
+// MARK: JSON Formatter
+extension FormatterView {
+    
     // Append a json object, do not show comma at last if withComma is false.
     private func appendJSON(_ json: JSON, _ withComma: Bool) {
         // If JSON is an array, handle it as an array rather than an object.
@@ -119,7 +204,7 @@ public class FormatterView: UIView {
             append(",", type: .normal)
         }
     }
-
+    
     private func append(_ text: String, type: CodeType) {
         switch type {
         case .normal:
@@ -132,21 +217,10 @@ public class FormatterView: UIView {
             attributer = attributer.append("\(text),".color(style.color.number))
         case .string:
             attributer = attributer.append("\"\(text)\",".color(style.color.string))
-        default:
-            break
         }
     }
     
-    private func appendTab(_ n: Int) {
-        var tab = ""
-        for _ in 0 ..< n {
-            tab += "  "
-        }
-        append(tab, type: .normal)
-    }
-    
-    private func newLine() {
-        append("\n", type: .normal)
-    }
 
+    
 }
+
