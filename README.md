@@ -7,8 +7,8 @@
 
 MGFormatter can format the JSON or HTML code in a view with customized keyword color and font.
 <div>
-<img src="https://raw.githubusercontent.com/lm2343635/MGFormatter/master/screenshot/json-dark.png" width="49%">
-<img src="https://raw.githubusercontent.com/lm2343635/MGFormatter/master/screenshot/html-dark.png" width="49%">
+<img src="https://raw.githubusercontent.com/lm2343635/MGFormatter/master/screenshot/json-dark.png" width="300">
+<img src="https://raw.githubusercontent.com/lm2343635/MGFormatter/master/screenshot/html-dark.png" width="300">
 </div>
 
 ## Example
@@ -58,12 +58,12 @@ Here is the demo code for customized style.
 
 ```Swift
 let color = JSONColor(normal: .white,
-                                  attribute: .yellow,
-                                  boolean: .green,
-                                  string: .cyan,
-                                  number: .orange)
-let style = FormatterStyle(font: UIFont.systemFont(ofSize: 12), lineSpacing: 5, type: .json(color))
-formatterView.format(string: utf8Text, style: style)
+                      attribute: .yellow,
+                      boolean: .green,
+                      string: .cyan,
+                      number: .orange)
+let style = FormatterStyle(font: UIFont.systemFont(ofSize: 12), lineSpacing: 5, type: .json(JSONColor()))
+self.formatterView.format(string: utf8Text, style: style)
 ```
 
 ## Installation
