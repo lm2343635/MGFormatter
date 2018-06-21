@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'MGFormatter'
-  s.version          = '0.1'
+  s.version          = '0.2'
   s.summary          = 'A code formatting library for iOS.'
 
 # This description is used to generate tags and improve search results.
@@ -18,11 +18,11 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-MGFormatter can format code(JSON, XML, HTML..,) in a view with customized keyword color and font.
+MGFormatter can format the JSON or HRML code in a view with customized keyword color and font.
                        DESC
 
   s.homepage         = 'https://github.com/lm2343635/MGFormatter'
-  # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
+  s.screenshots      = 'https://raw.githubusercontent.com/lm2343635/MGFormatter/master/screenshot/json-dark.png', 'https://raw.githubusercontent.com/lm2343635/MGFormatter/master/screenshot/html-dark.png'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'lm2343635' => 'lm2343635@126.com' }
   s.source           = { :git => 'https://github.com/lm2343635/MGFormatter.git', :tag => s.version.to_s }

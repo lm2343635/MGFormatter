@@ -16,7 +16,7 @@ public class JSONColor {
     var string: UIColor
     var number: UIColor
     
-    init(normal: UIColor, attribute: UIColor, boolean: UIColor, string: UIColor, number: UIColor) {
+    public init(normal: UIColor, attribute: UIColor, boolean: UIColor, string: UIColor, number: UIColor) {
         self.normal = normal
         self.attribute = attribute
         self.boolean = boolean
@@ -49,7 +49,7 @@ public class HTMLColor {
     var attributeName: UIColor
     var attributeValue: UIColor
     
-    init(normal: UIColor, tag: UIColor, attributeName: UIColor, attributeValue: UIColor) {
+    public init(normal: UIColor, tag: UIColor, attributeName: UIColor, attributeValue: UIColor) {
         self.normal = normal
         self.tag = tag
         self.attributeName = attributeName
@@ -72,7 +72,7 @@ public class HTMLColor {
 
 }
 
-enum FormatterType {
+public enum FormatterType {
     case json(JSONColor)
     case html(HTMLColor)
     case none(UIColor)
@@ -86,7 +86,7 @@ public class FormatterStyle {
     
     static let defaultFont = UIFont(name: "Menlo", size: 12) ?? UIFont.systemFont(ofSize: 12)
     
-    init(font: UIFont, lineSpacing: CGFloat, type: FormatterType) {
+    public init(font: UIFont, lineSpacing: CGFloat, type: FormatterType) {
         self.font = font
         self.lineSpacing = lineSpacing
         self.type = type
