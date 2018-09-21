@@ -1,5 +1,6 @@
 # MGFormatter
 
+![Swift 4.2](https://img.shields.io/badge/Swift-4.2-orange.svg)
 [![CI Status](http://img.shields.io/travis/lm2343635/MGFormatter.svg?style=flat)](https://travis-ci.org/lm2343635/MGFormatter)
 [![Version](https://img.shields.io/cocoapods/v/MGFormatter.svg?style=flat)](http://cocoapods.org/pods/MGFormatter)
 [![License](https://img.shields.io/cocoapods/l/MGFormatter.svg?style=flat)](http://cocoapods.org/pods/MGFormatter)
@@ -17,8 +18,8 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 ## Requirements
 
-- iOS 9.0+
-- Xcodw 9.0+
+- iOS 8.0+
+- Xcode 9.0+
 
 ## Usage
 
@@ -72,7 +73,7 @@ MGFormatter is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'MGFormatter', '~> 0.2'
+pod 'MGFormatter', '~> 0.3'
 ```
 
 ## Author
