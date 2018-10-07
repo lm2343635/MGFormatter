@@ -108,4 +108,12 @@ public class FormatterStyle {
         return FormatterStyle(font: defaultFont, lineSpacing: 5, type: .html(.dark))
     }
     
+    public class var noneLight: FormatterStyle {
+        return FormatterStyle(font: defaultFont, lineSpacing: 5, type: .none(.darkGray))
+    }
+
+    public class var noneDark: FormatterStyle {
+        return FormatterStyle(font: defaultFont, lineSpacing: 5, type: .none(.white))
+    }
+
 }
