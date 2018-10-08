@@ -19,8 +19,6 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         request(formatterView)
-        
-        
     }
     
     @IBAction func request(_ sender: Any) {

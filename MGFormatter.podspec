@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'MGFormatter'
-  s.version          = '0.3'
+  s.version          = '0.3.1'
   s.summary          = 'A code formatting library for iOS.'
 
 # This description is used to generate tags and improve search results.
@@ -26,19 +26,12 @@ MGFormatter can format the JSON or HRML code in a view with customized keyword c
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'lm2343635' => 'lm2343635@126.com' }
   s.source           = { :git => 'https://github.com/lm2343635/MGFormatter.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
+  s.social_media_url = 'https://github.com/lm2343635/MGFormatter'
 
   s.ios.deployment_target = '8.0'
 
   s.source_files = 'MGFormatter/Classes/**/*'
   
-  # s.resource_bundles = {
-  #   'MGFormatter' => ['MGFormatter/Assets/*.png']
-  # }
-
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-
   s.dependency 'SwiftyJSON', '~> 4'
   s.dependency 'Fuzi', '~> 2'
   s.dependency 'AttributedTextView', '~> 1.2'
