@@ -32,9 +32,9 @@ MGFormatter can format the JSON or HRML code in a view with customized keyword c
 
   s.source_files = 'MGFormatter/Classes/**/*'
   
-  s.dependency 'SwiftyJSON', '~> 4'
-  s.dependency 'Fuzi', '~> 2'
-  s.dependency 'AttributedTextView', '~> 1.2'
-  s.dependency 'SnapKit', '~> 4'
+  s.dependency 'SwiftyJSON', '~> 4.3'
+  s.dependency 'Fuzi', '~> 2.2'
+  s.dependency 'AttributedTextView', '~> 1.3'
+  s.dependency 'SnapKit', '~> 4.2'
   
 end
