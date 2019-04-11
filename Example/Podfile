@@ -2,7 +2,7 @@ use_frameworks!
 platform :ios, '9.0'
 
 target 'MGFormatter_Example' do
-  pod 'MGFormatter', :path => '../'
+  pod 'MGFormatter/Rx', :path => '../'
   pod 'Alamofire', '~> 4.5'
 
   target 'MGFormatter_Tests' do
