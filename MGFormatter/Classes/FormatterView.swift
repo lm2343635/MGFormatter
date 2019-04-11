@@ -10,7 +10,6 @@ import UIKit
 import SwiftyJSON
 import Fuzi
 import AttributedTextView
-import SnapKit
 
 enum JSONCodeType {
     case normal
@@ -52,12 +51,7 @@ public class FormatterView: UIView {
         self.style = style
 
         addSubview(codeTextView)
-        codeTextView.snp.makeConstraints {
-            $0.left.equalToSuperview()
-            $0.right.equalToSuperview()
-            $0.top.equalToSuperview()
-            $0.bottom.equalToSuperview()
-        }
+        createConstraints()
         
         switch style.type {
         case .json(_):
@@ -90,6 +84,14 @@ public class FormatterView: UIView {
     
     private func newLine() {
         attributer = attributer.append("\n")
+    }
+    
+    private func createConstraints() {
+        codeTextView.translatesAutoresizingMaskIntoConstraints = false
+        codeTextView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        codeTextView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        codeTextView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        codeTextView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
     
 }
@@ -218,4 +220,3 @@ extension FormatterView {
     }
 
 }
-
