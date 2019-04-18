@@ -58,11 +58,13 @@ The following colors of keywords can be customized.
 Here is the demo code for customized style.
 
 ```Swift
-let color = JSONColor(normal: .white,
-                      attribute: .yellow,
-                      boolean: .green,
-                      string: .cyan,
-                      number: .orange)
+let color = JSONColor(
+    normal: .white,
+    attribute: .yellow,
+    boolean: .green,
+    string: .cyan,
+    number: .orange
+)
 let style = FormatterStyle(font: UIFont.systemFont(ofSize: 12), lineSpacing: 5, type: .json(JSONColor()))
 self.formatterView.format(string: utf8Text, style: style)
 ```
