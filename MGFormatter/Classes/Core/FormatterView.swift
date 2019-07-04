@@ -52,6 +52,8 @@ public class FormatterView: UIView {
     private lazy var codeTextView: AttributedTextView = {
         let textView = AttributedTextView()
         textView.backgroundColor = .clear
+        textView.isEditable = false
+        textView.isSelectable = true
         return textView
     }()
     
@@ -62,6 +64,44 @@ public class FormatterView: UIView {
     private var attributer = Attributer("")
     
     private var tagStack: [String] = []
+    
+    private func appendTab(_ n: Int) {
+        var tab = ""
+        for _ in 0 ..< n {
+            tab += "  "
+        }
+        attributer = attributer.append(tab)
+    }
+    
+    private func newLine() {
+        attributer = attributer.append("\n")
+    }
+    
+    private func createConstraints() {
+        codeTextView.translatesAutoresizingMaskIntoConstraints = false
+        codeTextView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        codeTextView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        codeTextView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        codeTextView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+    }
+    
+    public var isEditable: Bool {
+        get {
+            return codeTextView.isEditable
+        }
+        set {
+            codeTextView.isEditable = newValue
+        }
+    }
+    
+    public var isSelectable: Bool {
+        get {
+            return codeTextView.isSelectable
+        }
+        set {
+            codeTextView.isSelectable = newValue
+        }
+    }
     
     public func format(string: String, style: FormatterStyle) {
         self.string = string
@@ -89,26 +129,6 @@ public class FormatterView: UIView {
             paragraphStyle.lineSpacing = style.lineSpacing
             return paragraphStyle
         }()).font(style.font)
-    }
-    
-    private func appendTab(_ n: Int) {
-        var tab = ""
-        for _ in 0 ..< n {
-            tab += "  "
-        }
-        attributer = attributer.append(tab)
-    }
-    
-    private func newLine() {
-        attributer = attributer.append("\n")
-    }
-    
-    private func createConstraints() {
-        codeTextView.translatesAutoresizingMaskIntoConstraints = false
-        codeTextView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        codeTextView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        codeTextView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        codeTextView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
     
 }
