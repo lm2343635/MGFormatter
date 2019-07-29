@@ -75,7 +75,7 @@ MGFormatter is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'MGFormatter', '~> 0.3'
+pod 'MGFormatter'
 ```
 
 ## Author
