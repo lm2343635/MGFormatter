@@ -29,7 +29,7 @@ import RxCocoa
 extension Reactive where Base: FormatterView {
     
     public func format(style: FormatterStyle) -> Binder<String> {
-        return Binder(self.base) { (formatter, string) in
+        Binder(base) { formatter, string in
             formatter.format(string: string, style: style)
         }
     }
