@@ -29,6 +29,7 @@ MGFormatter can format the JSON or HRML code in a view with customized keyword c
   s.social_media_url = 'https://github.com/lm2343635/MGFormatter'
 
   s.ios.deployment_target = '9.0'
+  s.swift_versions = '5.0'
   s.xcconfig = { 'HEADER_SEARCH_PATHS' => '$(SDKROOT)/usr/include/libxml2' }
   
   s.dependency 'SwiftyJSON', '~> 5.0'
