@@ -107,9 +107,12 @@ public class FormatterView: UIView {
         self.string = string
         self.style = style
 
-        addSubview(codeTextView)
-        createConstraints()
-        
+        if codeTextView.superview == nil {
+            addSubview(codeTextView)
+            createConstraints()
+        }
+
+        attributer = Attributer("")
         switch style.type {
         case .json(_):
             if let data = string.data(using: .utf8), let json = try? JSON(data: data) {
@@ -124,11 +127,13 @@ public class FormatterView: UIView {
             attributer = string.color(color)
         }
         
-        codeTextView.attributer = attributer.all.paragraph({
-            let paragraphStyle = NSMutableParagraphStyle()
-            paragraphStyle.lineSpacing = style.lineSpacing
-            return paragraphStyle
-        }()).font(style.font)
+        codeTextView.attributer = attributer.all
+            .paragraph({
+                let paragraphStyle = NSMutableParagraphStyle()
+                paragraphStyle.lineSpacing = style.lineSpacing
+                return paragraphStyle
+            }())
+            .font(style.font)
     }
     
 }
