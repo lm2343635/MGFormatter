@@ -114,12 +114,11 @@ public class FormatterView: UIView {
 
         attributer = Attributer("")
         switch style.type {
-        case .json(_):
+        case .json:
             if let data = string.data(using: .utf8), let json = try? JSON(data: data) {
                 appendJSON(json, false)
             }
-            
-        case .html(_):
+        case .html:
             if let document = try? HTMLDocument(string: string, encoding: .utf8), let root = document.root  {
                 appendHTML(root)
             }
@@ -198,7 +197,9 @@ extension FormatterView {
         // Handle the json as an object.
         tabs += 1
         appendJSONNode("{\n", type: .normal)
-        for (key, subJson): (String, JSON) in json {
+        json.sorted { lhs, rhs in
+            lhs.0.compare(rhs.0) == .orderedAscending
+        }.forEach { key, subJson in
             appendTab(tabs)
             appendJSONNode(key, type: .attribute)
             if let boolean = subJson.bool {
