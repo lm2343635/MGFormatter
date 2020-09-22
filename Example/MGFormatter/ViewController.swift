@@ -22,11 +22,14 @@ class ViewController: UIViewController {
     }
     
     @IBAction func request(_ sender: FormatterView) {
-        Alamofire.request(urlTextField.text!).responseJSON { [weak self] response in
-            guard let formatterView = self?.formatterView else {
+        guard let url = urlTextField.text else {
+            return
+        }
+        Alamofire.request(url).responseJSON { [weak self] response in
+            guard let formatterView = self?.formatterView, let data = response.data else {
                 return
             }
-            let utf8Text = String(data: response.data!, encoding: .utf8) ?? ""
+            let utf8Text = String(data: data, encoding: .utf8) ?? ""
             formatterView.format(string: utf8Text, style: .jsonDark)
         }
     }

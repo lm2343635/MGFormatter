@@ -1,0 +1,20 @@
+name: build_check
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Pod install
+      run: pod install --repo-update --project-directory=Example
+    - name: Run tests
+      run: set -o pipefail && xcodebuild -workspace Example/MGFormatter-Example.xcworkspace -scheme MGFormatter-Example -sdk iphonesimulator build CODE_SIGNING_REQUIRED=NO | xcpretty -c
+

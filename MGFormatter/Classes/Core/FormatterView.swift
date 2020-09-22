@@ -31,9 +31,9 @@ import AttributedTextView
 enum JSONCodeType {
     case normal
     case attribute
-    case boolean
-    case string
-    case number
+    case boolean(withComma: Bool)
+    case string(withComma: Bool)
+    case number(withComma: Bool)
 }
 
 enum XMLCodeType {
@@ -107,16 +107,18 @@ public class FormatterView: UIView {
         self.string = string
         self.style = style
 
-        addSubview(codeTextView)
-        createConstraints()
-        
+        if codeTextView.superview == nil {
+            addSubview(codeTextView)
+            createConstraints()
+        }
+
+        attributer = Attributer("")
         switch style.type {
-        case .json(_):
+        case .json:
             if let data = string.data(using: .utf8), let json = try? JSON(data: data) {
                 appendJSON(json, false)
             }
-            
-        case .html(_):
+        case .html:
             if let document = try? HTMLDocument(string: string, encoding: .utf8), let root = document.root  {
                 appendHTML(root)
             }
@@ -124,11 +126,13 @@ public class FormatterView: UIView {
             attributer = string.color(color)
         }
         
-        codeTextView.attributer = attributer.all.paragraph({
-            let paragraphStyle = NSMutableParagraphStyle()
-            paragraphStyle.lineSpacing = style.lineSpacing
-            return paragraphStyle
-        }()).font(style.font)
+        codeTextView.attributer = attributer.all
+            .paragraph({
+                let paragraphStyle = NSMutableParagraphStyle()
+                paragraphStyle.lineSpacing = style.lineSpacing
+                return paragraphStyle
+            }())
+            .font(style.font)
     }
     
 }
@@ -187,27 +191,32 @@ extension FormatterView {
     private func appendJSON(_ json: JSON, _ withComma: Bool) {
         // If JSON is an array, handle it as an array rather than an object.
         if let array = json.array {
-            appendJSONArray(array)
+            appendJSONArray(array, withComma: withComma)
             return
         }
         // Handle the json as an object.
         tabs += 1
         appendJSONNode("{\n", type: .normal)
-        for (key, subJson): (String, JSON) in json {
+        let sortedJson = json.sorted { lhs, rhs in
+            lhs.0.compare(rhs.0) == .orderedAscending
+        }
+        sortedJson.enumerated().forEach { index, json in
+            let (key, subJson) = json
+            let withComma = index != sortedJson.count - 1
             appendTab(tabs)
             appendJSONNode(key, type: .attribute)
             if let boolean = subJson.bool {
-                appendJSONNode(boolean ? Const.trueName : Const.falseName, type: .boolean)
+                appendJSONNode(boolean ? Const.trueName : Const.falseName, type: .boolean(withComma: withComma))
             } else if let string = subJson.string {
-                appendJSONNode(string, type: .string)
+                appendJSONNode(string, type: .string(withComma: withComma))
             } else if let double = subJson.double {
                 if double.truncatingRemainder(dividingBy: 1) == 0 {
-                    appendJSONNode(String(format: "%.0f", double), type: .number)
+                    appendJSONNode(String(format: "%.0f", double), type: .number(withComma: withComma))
                 } else {
-                    appendJSONNode(String(double), type: .number)
+                    appendJSONNode(String(double), type: .number(withComma: withComma))
                 }
             } else if let array = subJson.array  {
-                appendJSONArray(array)
+                appendJSONArray(array, withComma: withComma)
             } else {
                 appendJSON(subJson, true)
             }
@@ -223,7 +232,7 @@ extension FormatterView {
     }
     
     // Append a json array with type [JSON]
-    private func appendJSONArray(_ array: [JSON]) {
+    private func appendJSONArray(_ array: [JSON], withComma: Bool) {
         appendJSONNode("[\n", type: .normal)
         tabs += 1
         appendTab(tabs)
@@ -234,7 +243,7 @@ extension FormatterView {
         newLine()
         appendTab(tabs)
         appendJSONNode("]", type: .normal)
-        if tabs > 0 {
+        if tabs > 0 && withComma {
             appendJSONNode(",", type: .normal)
         }
     }
@@ -246,12 +255,12 @@ extension FormatterView {
                 attributer = attributer.append(text.color(color.normal))
             case .attribute:
                 attributer = attributer.append("\"\(text)\": ".color(color.attribute))
-            case .boolean:
-                attributer = attributer.append("\(text),".color(color.boolean))
-            case .number:
-                attributer = attributer.append("\(text),".color(color.number))
-            case .string:
-                attributer = attributer.append("\"\(text)\",".color(color.string))
+            case .boolean(let withComma):
+                attributer = attributer.append("\(text)\(withComma ? "," : "")".color(color.boolean))
+            case .number(let withComma):
+                attributer = attributer.append("\(text)\(withComma ? "," : "")".color(color.number))
+            case .string(let withComma):
+                attributer = attributer.append("\"\(text)\"\(withComma ? "," : "")".color(color.string))
             }
         }
     }
