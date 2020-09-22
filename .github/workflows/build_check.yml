@@ -16,5 +16,5 @@ jobs:
     - name: Pod install
       run: pod install --repo-update --project-directory=Example
     - name: Run tests
-      run: set -o pipefail && xcodebuild -workspace Example/MGFormatter-Example.xcworkspace -scheme MGFormatter-Example -sdk iphonesimulator build CODE_SIGNING_REQUIRED=NO | xcpretty -c
+      run: set -o pipefail && xcodebuild -workspace Example/MGFormatter.xcworkspace -scheme MGFormatter-Example -sdk iphonesimulator build CODE_SIGNING_REQUIRED=NO | xcpretty -c
 
