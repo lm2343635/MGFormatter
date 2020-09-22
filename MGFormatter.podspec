@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'MGFormatter'
-  s.version          = '0.5'
+  s.version          = '0.5.1'
   s.summary          = 'A code formatting library for iOS.'
 
 # This description is used to generate tags and improve search results.
