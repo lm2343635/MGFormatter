@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'MGFormatter'
-  s.version          = '0.5.1'
+  s.version          = '0.6'
   s.summary          = 'A code formatting library for iOS.'
 
 # This description is used to generate tags and improve search results.
@@ -32,9 +32,9 @@ MGFormatter can format the JSON or HRML code in a view with customized keyword c
   s.swift_versions = '5.0'
   s.xcconfig = { 'HEADER_SEARCH_PATHS' => '$(SDKROOT)/usr/include/libxml2' }
   
-  s.dependency 'SwiftyJSON', '~> 5.0'
+  s.dependency 'SwiftyJSON', '~> 5'
   s.dependency 'Fuzi', '~> 3'
-  s.dependency 'AttributedTextView', '~> 1.3'
+  s.dependency 'AttributedTextView', '~> 1'
   
   s.default_subspec = 'Core'
   
@@ -45,7 +45,7 @@ MGFormatter can format the JSON or HRML code in a view with customized keyword c
   
   s.subspec 'Rx' do |rx|
       rx.dependency 'MGFormatter/Core', '~> 0'
-      rx.dependency 'RxCocoa', '~> 5.0'
+      rx.dependency 'RxCocoa', '~> 6.0'
       rx.source_files = 'MGFormatter/Classes/Rx/**/*'
   end
   
